@@ -12,55 +12,89 @@ const ALLOWANCE_AMOUNT = 50;
 const ADMIN_PASSWORD   = "parent123";
 
 const KIDS = [
-  { id:"kaixian", name:"楷芯", emoji:"🐱", color:"#f97316", grad:"linear-gradient(135deg,#f97316,#ec4899)" },
-  { id:"xingyu",  name:"星瑀", emoji:"🌟", color:"#6366f1", grad:"linear-gradient(135deg,#6366f1,#06b6d4)" },
-];
-
-const DEFAULT_SCHEDULE = {
-  0: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背英文 3 個單字 📖"],
-  1: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背英文 3 個單字 📖"],
-  2: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","HESS 複習＆作業 📝"],
-  3: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背英文 3 個單字 📖"],
-  4: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背英文 3 個單字 📖"],
-  5: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背英文 3 個單字 📖"],
-  6: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","HESS 複習＆作業 📝"],
-};
-const DEFAULT_BONUS = [
-  { id:"w1",  label:"背五個單字 📖",   score:1  },
-  { id:"w2",  label:"預習國語 📗",      score:1  },
-  { id:"w3",  label:"預習數學 📐",      score:1  },
-  { id:"w4",  label:"預習自然 🔬",      score:1  },
-  { id:"w5",  label:"預習社會 🌏",      score:1  },
-  { id:"w6",  label:"複習國語 📗",      score:1  },
-  { id:"w7",  label:"複習數學 📐",      score:1  },
-  { id:"w8",  label:"複習自然 🔬",      score:1  },
-  { id:"w9",  label:"複習社會 🌏",      score:1  },
-  { id:"w10", label:"跳繩 200 下 🪢",  score:1  },
-  { id:"w11", label:"幫忙收衣服 👕",    score:1  },
-  { id:"w12", label:"幫忙洗碗筷 🍽️",  score:1  },
-  { id:"w13", label:"冷靜讓妹妹 🕊️",  score:2  },
-  { id:"w14", label:"國甲乙本 甲上 📒",score:5  },
-  { id:"w15", label:"圈詞本 甲上 📒",  score:5  },
-  { id:"w16", label:"數練 90 分 🔢",   score:1  },
-  { id:"w17", label:"數練 100 分 🔢",  score:5  },
-  { id:"w18", label:"大考 90 分 🏅",   score:1  },
-  { id:"w19", label:"大考 95 分 🥈",   score:5  },
-  { id:"w20", label:"大考 100 分 🥇",  score:10 },
-];
-const DEFAULT_DEDUCTIONS = [
-  { id:"d1", label:"頂嘴 😤",          score:2 },
-  { id:"d2", label:"不收書包 🎒",      score:1 },
-  { id:"d3", label:"沒刷牙就睡 🪥",   score:2 },
-  { id:"d4", label:"亂發脾氣 😠",      score:2 },
-];
-const DEFAULT_REWARDS = [
-  { id:"r1", label:"遊戲 1 分鐘 🎮",  cost:1     },
-  { id:"r2", label:"遊戲 5 分鐘 🎮",  cost:5     },
-  { id:"r3", label:"文具 ✏️",          cost:100   },
-  { id:"r4", label:"書 📖",            cost:200   },
-  { id:"r5", label:"小玩具 🧸",        cost:500   },
-  { id:"r6", label:"大玩具 🎁",        cost:1000  },
-  { id:"r7", label:"狗狗一隻 🐕",      cost:10000 },
+  {
+    id:"kaixian", name:"楷芯", emoji:"🐱",
+    color:"#f97316", grad:"linear-gradient(135deg,#f97316,#ec4899)",
+    defaultSchedule: {
+      0: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背英文 3 個單字 📖"],
+      1: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背英文 3 個單字 📖"],
+      2: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","HESS 複習＆作業 📝"],
+      3: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背英文 3 個單字 📖"],
+      4: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背英文 3 個單字 📖"],
+      5: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背英文 3 個單字 📖"],
+      6: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","HESS 複習＆作業 📝"],
+    },
+    defaultBonus: [
+      { id:"w1",  label:"背五個單字 📖",    score:1  },
+      { id:"w2",  label:"預習國語 📗",       score:1  },
+      { id:"w3",  label:"預習數學 📐",       score:1  },
+      { id:"w4",  label:"預習自然 🔬",       score:1  },
+      { id:"w5",  label:"預習社會 🌏",       score:1  },
+      { id:"w6",  label:"複習國語 📗",       score:1  },
+      { id:"w7",  label:"複習數學 📐",       score:1  },
+      { id:"w8",  label:"複習自然 🔬",       score:1  },
+      { id:"w9",  label:"複習社會 🌏",       score:1  },
+      { id:"w10", label:"跳繩 200 下 🪢",   score:1  },
+      { id:"w11", label:"幫忙收衣服 👕",     score:1  },
+      { id:"w12", label:"幫忙洗碗筷 🍽️",   score:1  },
+      { id:"w13", label:"冷靜讓妹妹 🕊️",   score:2  },
+      { id:"w14", label:"國甲乙本 甲上 📒", score:5  },
+      { id:"w15", label:"圈詞本 甲上 📒",   score:5  },
+      { id:"w16", label:"數練 90 分 🔢",    score:1  },
+      { id:"w17", label:"數練 100 分 🔢",   score:5  },
+      { id:"w18", label:"大考 90 分 🏅",    score:1  },
+      { id:"w19", label:"大考 95 分 🥈",    score:5  },
+      { id:"w20", label:"大考 100 分 🥇",   score:10 },
+    ],
+    defaultDeductions: [
+      { id:"d1", label:"頂嘴 😤",         score:2 },
+      { id:"d2", label:"不收書包 🎒",     score:1 },
+      { id:"d3", label:"沒刷牙就睡 🪥",  score:2 },
+      { id:"d4", label:"亂發脾氣 😠",     score:2 },
+    ],
+    defaultRewards: [
+      { id:"r1", label:"遊戲 1 分鐘 🎮", cost:1     },
+      { id:"r2", label:"遊戲 5 分鐘 🎮", cost:5     },
+      { id:"r3", label:"文具 ✏️",         cost:100   },
+      { id:"r4", label:"書 📖",           cost:200   },
+      { id:"r5", label:"小玩具 🧸",       cost:500   },
+      { id:"r6", label:"大玩具 🎁",       cost:1000  },
+      { id:"r7", label:"狗狗一隻 🐕",     cost:10000 },
+    ],
+  },
+  {
+    id:"xingyu", name:"星瑀", emoji:"🌟",
+    color:"#6366f1", grad:"linear-gradient(135deg,#6366f1,#06b6d4)",
+    defaultSchedule: {
+      0: ["自己刷牙洗臉 🪥","自己睡覺","早餐不生氣","起床不生氣","唸英文書"],
+      1: ["自己刷牙洗臉 🪥","自己睡覺","早餐不生氣","起床不生氣","唸英文書"],
+      2: ["自己刷牙洗臉 🪥","自己睡覺","早餐不生氣","起床不生氣","唸英文書"],
+      3: ["自己刷牙洗臉 🪥","自己睡覺","早餐不生氣","起床不生氣","唸英文書"],
+      4: ["自己刷牙洗臉 🪥","自己睡覺","早餐不生氣","起床不生氣","唸英文書"],
+      5: ["自己刷牙洗臉 🪥","自己睡覺","早餐不生氣","起床不生氣","唸英文書"],
+      6: ["自己刷牙洗臉 🪥","自己睡覺","早餐不生氣","起床不生氣","唸英文書"],
+    },
+    defaultBonus: [
+      { id:"w1", label:"幫忙自己收衣服 👕",   score:1 },
+      { id:"w2", label:"不跟姊姊吵架", score:1 },
+      { id:"w3", label:"自己整理玩具 🧸", score:1 },
+      { id:"w4", label:"練習念英文", score:1 },
+      { id:"w5", label:"跟阿公下圍棋 ❤️",    score:1 },
+    ],
+    defaultDeductions: [
+      { id:"d1", label:"亂發脾氣 😠",    score:2 },
+      { id:"d2", label:"不收玩具 🧸",    score:1 },
+      { id:"d3", label:"沒刷牙就睡 🪥", score:2 },
+    ],
+    defaultRewards: [
+      { id:"r1", label:"遊戲 5 分鐘 🎮", cost:5    },
+      { id:"r2", label:"貼紙 🌟",         cost:20   },
+      { id:"r3", label:"小零食 🍬",       cost:30   },
+      { id:"r4", label:"小玩具 🧸",       cost:200  },
+      { id:"r5", label:"大玩具 🎁",       cost:500  },
+      { id:"r6", label:"貴賓狗娃娃",       cost:1000  },
+    ],
+  },
 ];
 
 /* ═══════════════════════════════════════════════
@@ -91,16 +125,16 @@ const loadKid = async (kidId) => {
 const saveKid = async (kidId, data) => {
   try { localStorage.setItem(STORE_KEY(kidId), JSON.stringify(data)); } catch{}
 };
-const initKid = () => ({
+const initKid = (kid) => ({
   stamps: {}, stampType: {}, bonusProgress: {}, totalScore: 0,
-  scoreLog: [],        // [{id,date,label,delta,type}] type: bonus|deduct|redeem|allowance
+  scoreLog: [],
   redeemHistory: [],
   allowanceHistory: [], allowanceRedeemed: 0,
   dailyProgress: {},
-  schedule: DEFAULT_SCHEDULE,
-  bonusTasks: DEFAULT_BONUS,
-  deductions: DEFAULT_DEDUCTIONS,
-  rewards: DEFAULT_REWARDS,
+  schedule: kid.defaultSchedule,
+  bonusTasks: kid.defaultBonus,
+  deductions: kid.defaultDeductions,
+  rewards: kid.defaultRewards,
 });
 
 /* ═══════════════════════════════════════════════
@@ -154,7 +188,7 @@ export default function App() {
   useEffect(()=>{
     Promise.all(KIDS.map(k=>loadKid(k.id))).then(results=>{
       const d = {};
-      KIDS.forEach((k,i)=>{ d[k.id]=results[i]||initKid(); });
+      KIDS.forEach((k,i)=>{ d[k.id]=results[i]||initKid(k); });
       setKidData(d); setLoaded(true);
     });
   },[]);
