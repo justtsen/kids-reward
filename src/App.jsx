@@ -101,22 +101,29 @@ const KIDS = [
 /* ═══════════════════════════════════════════════
    HELPERS
 ═══════════════════════════════════════════════ */
-const todayKey  = () => new Date().toISOString().slice(0,10);
-const getDow    = () => new Date().getDay();
+// 台灣時區 +8
+const toTWDateStr = (date) => {
+  const tw = new Date(date.getTime() + 8 * 60 * 60 * 1000);
+  return tw.toISOString().slice(0, 10);
+};
+const todayKey  = () => toTWDateStr(new Date());
+const getDow    = () => { const tw = new Date(new Date().getTime() + 8*60*60*1000); return tw.getUTCDay(); };
 const uid       = () => Math.random().toString(36).slice(2,8);
 const weekOf    = (dateStr) => {
-  const d = new Date(dateStr);
-  d.setDate(d.getDate() - d.getDay());
-  return d.toISOString().slice(0,10);
+  const d = new Date(dateStr + "T00:00:00+08:00");
+  const day = d.getDay();
+  d.setDate(d.getDate() - day);
+  return toTWDateStr(d);
 };
 const weekStart = () => weekOf(todayKey());
 const formatDate = (str) => {
-  const d = new Date(str);
+  const d = new Date(str + "T00:00:00+08:00");
   return `${d.getMonth()+1}/${d.getDate()} 週${DAYS_ZH[d.getDay()]}`;
 };
 const addDays = (dateStr, n) => {
-  const d = new Date(dateStr); d.setDate(d.getDate()+n);
-  return d.toISOString().slice(0,10);
+  const d = new Date(dateStr + "T00:00:00+08:00");
+  d.setDate(d.getDate() + n);
+  return toTWDateStr(d);
 };
 
 /* ═══════════════════════════════════════════════
@@ -475,13 +482,20 @@ function KidScreen({ kid, data, onUpdate, onBack }) {
     return d;
   });
 
-  // ── Bonus tasks (daily, no undo) ──
-  const completeBonus = task => upd(d=>{
+  const toggleBonus = (task) => upd(d=>{
     if(!d.bonusProgress[today]) d.bonusProgress[today]={};
-    if(d.bonusProgress[today][task.id]) return d;
-    d.bonusProgress[today][task.id]=true;
-    d.totalScore+=task.score;
-    d.scoreLog=[{id:uid(),date:today,label:task.label,delta:task.score,type:"bonus"},...(d.scoreLog||[])];
+    const done = d.bonusProgress[today][task.id];
+    if(done){
+      // 取消
+      delete d.bonusProgress[today][task.id];
+      d.totalScore = Math.max(0, d.totalScore - task.score);
+      d.scoreLog=[{id:uid(),date:today,label:`取消：${task.label}`,delta:-task.score,type:"deduct"},...(d.scoreLog||[])];
+    } else {
+      // 完成
+      d.bonusProgress[today][task.id]=true;
+      d.totalScore += task.score;
+      d.scoreLog=[{id:uid(),date:today,label:task.label,delta:task.score,type:"bonus"},...(d.scoreLog||[])];
+    }
     return d;
   });
 
@@ -694,25 +708,14 @@ function KidScreen({ kid, data, onUpdate, onBack }) {
           <div style={{fontSize:15,fontWeight:800,color:"#1e293b",marginBottom:4,display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
             今日獎勵任務 <span style={bge("#dcfce7","#15803d")}>今日 +{bonusScore} 分</span>
           </div>
-          <div style={{fontSize:11,color:"#94a3b8",marginBottom:10}}>
-            {adminMode?"🔓 家長模式：可取消已完成項目":"✅ 完成後不可取消，每天重新開始"}
-          </div>
+          <div style={{fontSize:11,color:"#94a3b8",marginBottom:10}}>點擊可勾選或取消，每天重新開始</div>
           {data.bonusTasks.map(t=>{
             const done=todayBonus[t.id];
             return(
-              <div key={t.id} style={{display:"flex",alignItems:"center",gap:10,padding:"11px 14px",marginBottom:7,background:done?"#fef9c3":"#f8fafc",borderRadius:13,border:done?"2px solid #fde68a":"2px solid #e2e8f0",userSelect:"none",transition:"all .2s"}}>
-                {/* 勾選／完成圓圈：非家長模式下已完成不可點 */}
-                <div
-                  style={{width:26,height:26,borderRadius:"50%",background:done?"#f59e0b":"transparent",border:done?"none":"2px solid #cbd5e1",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:900,color:"#fff",flexShrink:0,cursor:done?"default":"pointer"}}
-                  onClick={()=>!done&&completeBonus(t)}>
-                  {done?"✓":""}
-                </div>
-                <span style={{flex:1,fontSize:14,textDecoration:done?"line-through":"none",opacity:done?0.6:1,color:"#1e293b",cursor:done?"default":"pointer"}} onClick={()=>!done&&completeBonus(t)}>{t.label}</span>
+              <div key={t.id} style={{display:"flex",alignItems:"center",gap:10,padding:"11px 14px",marginBottom:7,background:done?"#fef9c3":"#f8fafc",borderRadius:13,cursor:"pointer",border:done?"2px solid #fde68a":"2px solid #e2e8f0",userSelect:"none",transition:"all .2s"}} onClick={()=>toggleBonus(t)}>
+                <div style={{width:26,height:26,borderRadius:"50%",background:done?"#f59e0b":"transparent",border:done?"none":"2px solid #cbd5e1",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:900,color:"#fff",flexShrink:0}}>{done?"✓":""}</div>
+                <span style={{flex:1,fontSize:14,textDecoration:done?"line-through":"none",opacity:done?0.6:1,color:"#1e293b"}}>{t.label}</span>
                 <span style={bge(done?"#d1fae5":"#fde68a",done?"#065f46":"#92400e")}>{done?`+${t.score}分 ✓`:`+${t.score}分`}</span>
-                {/* 家長模式下已完成可取消 */}
-                {adminMode&&done&&(
-                  <button style={{padding:"3px 8px",background:"#fee2e2",border:"none",borderRadius:7,color:"#ef4444",fontSize:12,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap"}} onClick={()=>undoBonus(t)}>取消</button>
-                )}
               </div>
             );
           })}
