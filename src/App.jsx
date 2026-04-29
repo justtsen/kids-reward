@@ -528,6 +528,8 @@ function KidScreen({ kid, data, onUpdate, onBack }) {
     return d;
   });
 
+  const tryAdmin=()=>{ if(adminPwd===ADMIN_PASSWORD){setAdminMode(true);setShowLogin(false);setAdminPwd("");setAdminErr(false);}else setAdminErr(true); };
+
   // ── Makeup bonus ──
   const doMakeupBonus = (dateStr, task) => upd(d=>{
     if(!d.bonusProgress[dateStr]) d.bonusProgress[dateStr]={};
@@ -580,7 +582,7 @@ function KidScreen({ kid, data, onUpdate, onBack }) {
   const makeupDp    = data.dailyProgress?.[makeupDate]||{};
 
   return (
-    <div style={{minHeight:"100vh",background:"linear-gradient(135deg,#fef9c3 0%,#fce7f3 50%,#dbeafe 100%)",fontFamily:"'Segoe UI','PingFang TC',sans-serif",position:"relative",overflow:"hidden",paddingBottom:48}}>
+    <div style={{minHeight:"100vh",background:"linear-gradient(135deg,#fef9c3 0%,#fce7f3 50%,#dbeafe 100%)",fontFamily:"'Segoe UI','PingFang TC',sans-serif",position:"relative",overflow:"hidden",paddingBottom:48,isolation:"isolate"}}>
       <div style={{position:"fixed",top:-80,right:-80,width:240,height:240,borderRadius:"50%",background:"radial-gradient(circle,#fde68a44,#fb718588)",zIndex:0}}/>
       <div style={{position:"fixed",bottom:-60,left:-60,width:200,height:200,borderRadius:"50%",background:"radial-gradient(circle,#a5f3fc44,#818cf888)",zIndex:0}}/>
 
@@ -797,7 +799,7 @@ function KidScreen({ kid, data, onUpdate, onBack }) {
 
       {/* ══ 家長管理 ══ */}
       {adminMode&&(
-        <div style={{...card,background:"#fffbeb",border:"2px solid #f97316"}}>
+        <div style={{position:"relative",zIndex:10,margin:"0 12px 10px",background:"#fffbeb",borderRadius:18,padding:14,boxShadow:"0 4px 20px #f9731622",border:"2px solid #f97316"}}>
           <div style={{fontSize:14,fontWeight:800,color:"#f97316",marginBottom:12,display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
             🔓 家長管理模式
             <div style={{display:"inline-flex",background:"#f1f5f9",borderRadius:10,padding:2,gap:1}}>
