@@ -1,11 +1,11 @@
 import { Redis } from "@upstash/redis";
 
 const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN,
 });
 
-const SITE_PASSWORD = process.env.SITE_PASSWORD || "family2024";
+const SITE_PASSWORD = process.env.SITE_PASSWORD || "318611";
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
