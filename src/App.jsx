@@ -5,24 +5,24 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 ═══════════════════════════════════════════════ */
 const DAYS_ZH   = ["日","一","二","三","四","五","六"];
 const DAYS_FULL = ["週日","週一","週二","週三","週四","週五","週六"];
-const STAMP_MIN  = 3;
-const STAMP_FULL = 5;
 const STAMP_THRESHOLD  = 7;
 const ALLOWANCE_AMOUNT = 50;
-const ADMIN_PASSWORD   = "parent123";
+const ADMIN_PASSWORD   = "318611";
 
 const KIDS = [
   {
     id:"kaixian", name:"楷芯", emoji:"🐱",
     color:"#f97316", grad:"linear-gradient(135deg,#f97316,#ec4899)",
+    stampMin: 5,   // 5項得🐾
+    stampFull: 7,  // 7項得🐱
     defaultSchedule: {
-      0: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背英文 3 個單字 📖"],
-      1: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背英文 3 個單字 📖"],
-      2: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","HESS 複習＆作業 📝"],
-      3: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背英文 3 個單字 📖"],
-      4: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背英文 3 個單字 📖"],
-      5: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背英文 3 個單字 📖"],
-      6: ["早晚刷牙洗臉 🪥","主動吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","HESS 複習＆作業 📝"],
+      0: ["早上刷牙洗臉 🪥","晚上刷牙洗臉 🪥","早上吃中藥 🌿","晚上吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背 3 個英文單字 📖"],
+      1: ["早上刷牙洗臉 🪥","晚上刷牙洗臉 🪥","早上吃中藥 🌿","晚上吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背 3 個英文單字 📖"],
+      2: ["早上刷牙洗臉 🪥","晚上刷牙洗臉 🪥","早上吃中藥 🌿","晚上吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背 3 個英文單字 📖"],
+      3: ["早上刷牙洗臉 🪥","晚上刷牙洗臉 🪥","早上吃中藥 🌿","晚上吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背 3 個英文單字 📖"],
+      4: ["早上刷牙洗臉 🪥","晚上刷牙洗臉 🪥","早上吃中藥 🌿","晚上吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背 3 個英文單字 📖"],
+      5: ["早上刷牙洗臉 🪥","晚上刷牙洗臉 🪥","早上吃中藥 🌿","晚上吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背 3 個英文單字 📖"],
+      6: ["早上刷牙洗臉 🪥","晚上刷牙洗臉 🪥","早上吃中藥 🌿","晚上吃中藥 🌿","跳繩 100 下 🪢","寫日記 📔","背 3 個英文單字 📖"],
     },
     defaultBonus: [
       { id:"w1",  label:"背五個單字 📖",    score:1  },
@@ -65,21 +65,23 @@ const KIDS = [
   {
     id:"xingyu", name:"星瑀", emoji:"🌟",
     color:"#6366f1", grad:"linear-gradient(135deg,#6366f1,#06b6d4)",
+    stampMin: 3,   // 3項得🐾
+    stampFull: 5,  // 5項得🐱
     defaultSchedule: {
-      0: ["自己刷牙洗臉 🪥","自己睡覺","早餐不生氣","起床不生氣","唸英文書"],
-      1: ["自己刷牙洗臉 🪥","自己睡覺","早餐不生氣","起床不生氣","唸英文書"],
-      2: ["自己刷牙洗臉 🪥","自己睡覺","早餐不生氣","起床不生氣","唸英文書"],
-      3: ["自己刷牙洗臉 🪥","自己睡覺","早餐不生氣","起床不生氣","唸英文書"],
-      4: ["自己刷牙洗臉 🪥","自己睡覺","早餐不生氣","起床不生氣","唸英文書"],
-      5: ["自己刷牙洗臉 🪥","自己睡覺","早餐不生氣","起床不生氣","唸英文書"],
-      6: ["自己刷牙洗臉 🪥","自己睡覺","早餐不生氣","起床不生氣","唸英文書"],
+      0: ["早上刷牙洗臉 🪥","晚上刷牙洗臉 🪥","自己睡覺 🌙","起床不生氣 ☀️","早餐不生氣 🍳"],
+      1: ["早上刷牙洗臉 🪥","晚上刷牙洗臉 🪥","自己睡覺 🌙","起床不生氣 ☀️","早餐不生氣 🍳"],
+      2: ["早上刷牙洗臉 🪥","晚上刷牙洗臉 🪥","自己睡覺 🌙","起床不生氣 ☀️","早餐不生氣 🍳"],
+      3: ["早上刷牙洗臉 🪥","晚上刷牙洗臉 🪥","自己睡覺 🌙","起床不生氣 ☀️","早餐不生氣 🍳"],
+      4: ["早上刷牙洗臉 🪥","晚上刷牙洗臉 🪥","自己睡覺 🌙","起床不生氣 ☀️","早餐不生氣 🍳"],
+      5: ["早上刷牙洗臉 🪥","晚上刷牙洗臉 🪥","自己睡覺 🌙","起床不生氣 ☀️","早餐不生氣 🍳"],
+      6: ["早上刷牙洗臉 🪥","晚上刷牙洗臉 🪥","自己睡覺 🌙","起床不生氣 ☀️","早餐不生氣 🍳"],
     },
     defaultBonus: [
-      { id:"w1", label:"幫忙自己收衣服 👕",   score:1 },
-      { id:"w2", label:"不跟姊姊吵架", score:1 },
+      { id:"w1", label:"幫忙收衣服 👕",   score:1 },
+      { id:"w2", label:"幫忙洗碗筷 🍽️", score:1 },
       { id:"w3", label:"自己整理玩具 🧸", score:1 },
-      { id:"w4", label:"練習念英文", score:1 },
-      { id:"w5", label:"跟阿公下圍棋 ❤️",    score:1 },
+      { id:"w4", label:"跳繩 200 下 🪢", score:1 },
+      { id:"w5", label:"幫助姊姊 ❤️",    score:2 },
     ],
     defaultDeductions: [
       { id:"d1", label:"亂發脾氣 😠",    score:2 },
@@ -92,7 +94,6 @@ const KIDS = [
       { id:"r3", label:"小零食 🍬",       cost:30   },
       { id:"r4", label:"小玩具 🧸",       cost:200  },
       { id:"r5", label:"大玩具 🎁",       cost:500  },
-      { id:"r6", label:"貴賓狗娃娃",       cost:1000  },
     ],
   },
 ];
@@ -118,13 +119,41 @@ const addDays = (dateStr, n) => {
   return d.toISOString().slice(0,10);
 };
 
-const STORE_KEY = (kidId) => `kids_v9_${kidId}`;
+/* ═══════════════════════════════════════════════
+   STORAGE — Vercel KV via API (falls back to localStorage)
+═══════════════════════════════════════════════ */
+const SITE_PWD_KEY = "kids_site_pwd";
+const getSitePwd = () => sessionStorage.getItem(SITE_PWD_KEY) || "";
+const setSitePwd = (p) => sessionStorage.setItem(SITE_PWD_KEY, p);
+
+const apiCall = async (method, kidId, body) => {
+  try {
+    const res = await fetch(`/api/data?kidId=${kidId}`, {
+      method,
+      headers: { "Content-Type": "application/json", "x-password": getSitePwd() },
+      ...(body ? { body: JSON.stringify(body) } : {}),
+    });
+    if (res.status === 401) return { authError: true };
+    return res.ok ? res.json() : null;
+  } catch { return null; }
+};
+
 const loadKid = async (kidId) => {
-  try { const r=localStorage.getItem(STORE_KEY(kidId)); return r?JSON.parse(r):null; } catch{return null;}
+  // Try KV first
+  const res = await apiCall("GET", kidId);
+  if (res?.authError) return { authError: true };
+  if (res?.data) return res.data;
+  // Fallback: localStorage
+  try { const r = localStorage.getItem(`kids_v9_${kidId}`); return r ? JSON.parse(r) : null; } catch { return null; }
 };
+
 const saveKid = async (kidId, data) => {
-  try { localStorage.setItem(STORE_KEY(kidId), JSON.stringify(data)); } catch{}
+  // Save to KV
+  apiCall("POST", kidId, data);
+  // Also save locally as backup
+  try { localStorage.setItem(`kids_v9_${kidId}`, JSON.stringify(data)); } catch {}
 };
+
 const initKid = (kid) => ({
   stamps: {}, stampType: {}, bonusProgress: {}, totalScore: 0,
   scoreLog: [],
@@ -180,48 +209,102 @@ const MiniChart = ({ data, color="#f97316" }) => {
    MAIN APP
 ═══════════════════════════════════════════════ */
 export default function App() {
-  const [activeKid, setActiveKid] = useState(null); // null = home screen
+  const [screen,    setScreen]    = useState("login"); // login | home | kid
+  const [activeKid, setActiveKid] = useState(null);
   const [kidData,   setKidData]   = useState({});
-  const [loaded,    setLoaded]    = useState(false);
+  const [loginPwd,  setLoginPwd]  = useState("");
+  const [loginErr,  setLoginErr]  = useState("");
+  const [loading,   setLoading]   = useState(false);
 
-  // Load both kids
-  useEffect(()=>{
-    Promise.all(KIDS.map(k=>loadKid(k.id))).then(results=>{
-      const d = {};
-      KIDS.forEach((k,i)=>{ d[k.id]=results[i]||initKid(k); });
-      setKidData(d); setLoaded(true);
-    });
-  },[]);
+  const doLogin = async () => {
+    if (!loginPwd.trim()) return;
+    setLoading(true); setLoginErr("");
+    setSitePwd(loginPwd.trim());
+    // Verify by loading one kid
+    const res = await loadKid(KIDS[0].id);
+    if (res?.authError) {
+      setSitePwd("");
+      setLoginErr("密碼錯誤，請再試一次");
+      setLoading(false); return;
+    }
+    // Load all kids
+    const results = await Promise.all(KIDS.map(k => loadKid(k.id)));
+    const d = {};
+    KIDS.forEach((k, i) => { d[k.id] = (results[i] && !results[i].authError) ? results[i] : initKid(k); });
+    setKidData(d);
+    setScreen("home");
+    setLoading(false);
+  };
 
-  // Save on change
-  useEffect(()=>{
-    if(!loaded) return;
-    KIDS.forEach(k=>{ if(kidData[k.id]) saveKid(k.id, kidData[k.id]); });
-  },[kidData,loaded]);
-
-  if(!loaded) return(
-    <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"100vh",gap:16,background:"#fef9c3",fontFamily:"sans-serif"}}>
-      <span style={{fontSize:64}}>🐱</span><p style={{color:"#f59e0b"}}>載入中…</p>
-    </div>
-  );
-
-  const updKid = (kidId, fn) => setKidData(prev=>{
+  const updKid = (kidId, fn) => setKidData(prev => {
     const next = JSON.parse(JSON.stringify(prev));
     next[kidId] = fn(next[kidId]);
+    // 只存 localStorage，不自動寫 DB（使用者手動按「同步到雲端」才寫）
+    try { localStorage.setItem(`kids_v9_${kidId}`, JSON.stringify(next[kidId])); } catch {}
     return next;
   });
 
-  if(!activeKid) return <HomeScreen kids={KIDS} kidData={kidData} onSelect={setActiveKid}/>;
+  const goHome = () => setScreen("home");
 
+  // ── 登入畫面 ──
+  if (screen === "login") return (
+    <div style={{minHeight:"100vh",background:"linear-gradient(135deg,#fef9c3 0%,#fce7f3 50%,#dbeafe 100%)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",fontFamily:"'Segoe UI','PingFang TC',sans-serif",padding:"0 24px"}}>
+      <div style={{background:"#fff",borderRadius:28,padding:"40px 32px",maxWidth:340,width:"100%",boxShadow:"0 8px 40px #00000018",textAlign:"center"}}>
+        <div style={{fontSize:64,marginBottom:12}}>🏠</div>
+        <h1 style={{margin:"0 0 6px",fontSize:24,fontWeight:900,color:"#1e293b"}}>任務星球</h1>
+        <p style={{margin:"0 0 28px",fontSize:14,color:"#64748b"}}>請輸入家庭密碼進入</p>
+        <input
+          type="password"
+          style={{width:"100%",border:"2px solid #e2e8f0",borderRadius:14,padding:"14px 16px",fontSize:16,outline:"none",boxSizing:"border-box",marginBottom:10,textAlign:"center",letterSpacing:4}}
+          placeholder="••••••••"
+          value={loginPwd}
+          onChange={e=>{setLoginPwd(e.target.value);setLoginErr("");}}
+          onKeyDown={e=>e.key==="Enter"&&!loading&&doLogin()}
+          autoFocus
+        />
+        {loginErr && <p style={{color:"#ef4444",fontSize:13,margin:"0 0 10px",fontWeight:600}}>{loginErr}</p>}
+        <button
+          style={{width:"100%",padding:"14px",background:"linear-gradient(135deg,#f97316,#ec4899)",border:"none",borderRadius:14,color:"#fff",fontWeight:900,fontSize:16,cursor:loading?"not-allowed":"pointer",opacity:loading?0.7:1}}
+          onClick={doLogin} disabled={loading}>
+          {loading ? "驗證中…" : "進入 →"}
+        </button>
+      </div>
+    </div>
+  );
+
+  // ── 首頁 ──
+  if (screen === "home") return (
+    <HomeScreen
+      kids={KIDS} kidData={kidData}
+      onSelect={k=>{ setActiveKid(k); setScreen("kid"); }}
+      onLogout={()=>{ setSitePwd(""); setLoginPwd(""); setScreen("login"); }}
+      onPull={async () => {
+        const results = await Promise.all(KIDS.map(k => loadKid(k.id)));
+        const d = {};
+        KIDS.forEach((k, i) => {
+          if (results[i] && !results[i].authError) {
+            d[k.id] = results[i];
+            try { localStorage.setItem(`kids_v9_${k.id}`, JSON.stringify(results[i])); } catch {}
+          }
+        });
+        setKidData(prev => ({ ...prev, ...d }));
+      }}
+      onPush={async () => {
+        // 把本地資料推上 DB
+        await Promise.all(KIDS.map(k => apiCall("POST", k.id, kidData[k.id])));
+      }}
+    />
+  );
+
+  // ── 小孩頁面 ──
   const kid = KIDS.find(k=>k.id===activeKid);
-  const data = kidData[activeKid];
   return (
     <KidScreen
       key={activeKid}
       kid={kid}
-      data={data}
-      onUpdate={fn=>updKid(activeKid, fn)}
-      onBack={()=>setActiveKid(null)}
+      data={kidData[activeKid]}
+      onUpdate={fn=>updKid(activeKid,fn)}
+      onBack={goHome}
     />
   );
 }
@@ -229,14 +312,33 @@ export default function App() {
 /* ═══════════════════════════════════════════════
    HOME SCREEN
 ═══════════════════════════════════════════════ */
-function HomeScreen({ kids, kidData, onSelect }) {
+function HomeScreen({ kids, kidData, onSelect, onLogout, onPull, onPush }) {
+  const [pulling, setPulling] = useState(false);
+  const [pushing, setPushing] = useState(false);
+  const [msg,     setMsg]     = useState(""); // 操作結果提示
+
+  const doPull = async () => {
+    setPulling(true); setMsg("");
+    await onPull();
+    setPulling(false); setMsg("✅ 已從雲端讀取最新資料");
+    setTimeout(()=>setMsg(""), 3000);
+  };
+  const doPush = async () => {
+    setPushing(true); setMsg("");
+    await onPush();
+    setPushing(false); setMsg("☁️ 已同步到雲端資料庫");
+    setTimeout(()=>setMsg(""), 3000);
+  };
+
   return (
-    <div style={{minHeight:"100vh",background:"linear-gradient(135deg,#fef9c3 0%,#fce7f3 50%,#dbeafe 100%)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:24,fontFamily:"'Segoe UI','PingFang TC',sans-serif",padding:"0 24px"}}>
+    <div style={{minHeight:"100vh",background:"linear-gradient(135deg,#fef9c3 0%,#fce7f3 50%,#dbeafe 100%)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:20,fontFamily:"'Segoe UI','PingFang TC',sans-serif",padding:"0 24px"}}>
       <div style={{textAlign:"center"}}>
         <div style={{fontSize:56,marginBottom:8}}>🏠</div>
         <h1 style={{margin:0,fontSize:26,fontWeight:900,color:"#1e293b",letterSpacing:2}}>任務星球</h1>
         <p style={{margin:"8px 0 0",fontSize:14,color:"#64748b"}}>請選擇你是誰</p>
       </div>
+
+      {/* 小孩選擇卡片 */}
       <div style={{display:"flex",gap:16,width:"100%",maxWidth:360}}>
         {kids.map(kid=>{
           const data = kidData[kid.id];
@@ -258,6 +360,31 @@ function HomeScreen({ kids, kidData, onSelect }) {
           );
         })}
       </div>
+
+      {/* 同步區 */}
+      <div style={{width:"100%",maxWidth:360,background:"#ffffffcc",borderRadius:20,padding:"16px",boxShadow:"0 2px 12px #00000011"}}>
+        <div style={{fontSize:12,fontWeight:700,color:"#94a3b8",marginBottom:10,textAlign:"center"}}>☁️ 資料同步</div>
+        <div style={{display:"flex",gap:10}}>
+          <button
+            onClick={doPull}
+            disabled={pulling||pushing}
+            style={{flex:1,padding:"11px",background:pulling?"#e2e8f0":"linear-gradient(135deg,#3b82f6,#6366f1)",border:"none",borderRadius:13,color:pulling?"#94a3b8":"#fff",fontWeight:800,fontSize:13,cursor:pulling||pushing?"not-allowed":"pointer"}}>
+            {pulling?"讀取中…":"📥 從雲端讀取"}
+          </button>
+          <button
+            onClick={doPush}
+            disabled={pulling||pushing}
+            style={{flex:1,padding:"11px",background:pushing?"#e2e8f0":"linear-gradient(135deg,#22c55e,#16a34a)",border:"none",borderRadius:13,color:pushing?"#94a3b8":"#fff",fontWeight:800,fontSize:13,cursor:pulling||pushing?"not-allowed":"pointer"}}>
+            {pushing?"同步中…":"☁️ 同步到雲端"}
+          </button>
+        </div>
+        {msg && <div style={{marginTop:10,textAlign:"center",fontSize:12,fontWeight:700,color:"#475569"}}>{msg}</div>}
+        <div style={{marginTop:8,fontSize:11,color:"#cbd5e1",textAlign:"center"}}>
+          修改後記得按「同步到雲端」，換裝置前先按「從雲端讀取」
+        </div>
+      </div>
+
+      <button onClick={onLogout} style={{background:"none",border:"1.5px solid #cbd5e1",borderRadius:99,padding:"6px 20px",fontSize:12,color:"#94a3b8",cursor:"pointer",fontWeight:600}}>登出</button>
     </div>
   );
 }
@@ -293,6 +420,9 @@ function KidScreen({ kid, data, onUpdate, onBack }) {
   const today = todayKey();
   const dow   = getDow();
   const ws    = weekStart();
+
+  const STAMP_MIN  = kid.stampMin  || 3;
+  const STAMP_FULL = kid.stampFull || 5;
 
   const todayTasks = data.schedule?.[dow] || [];
   const dp         = data.dailyProgress?.[today] || {};
@@ -399,11 +529,27 @@ function KidScreen({ kid, data, onUpdate, onBack }) {
   });
 
   const tryAdmin=()=>{ if(adminPwd===ADMIN_PASSWORD){setAdminMode(true);setShowLogin(false);setAdminPwd("");setAdminErr(false);}else setAdminErr(true); };
-  const saveSchedItem=()=>{ if(!schedEditing)return; upd(d=>{ if(!d.schedule[schedDay])d.schedule[schedDay]=["","","","",""]; d.schedule[schedDay][schedEditing.idx]=schedEditing.value; return d; }); setSchedEditing(null); };
+  const saveSchedItem=()=>{ if(!schedEditing)return; upd(d=>{ if(!d.schedule[schedDay])d.schedule[schedDay]=Array(kid.stampFull).fill(""); d.schedule[schedDay][schedEditing.idx]=schedEditing.value; return d; }); setSchedEditing(null); };
 
   const saveBE=()=>{ if(!editingBonus?.label.trim())return; upd(d=>{const i=d.bonusTasks.findIndex(t=>t.id===editingBonus.id);if(i>=0)d.bonusTasks[i]={...editingBonus,score:Number(editingBonus.score)||1};return d;}); setEditingBonus(null); };
   const delB=id=>upd(d=>{d.bonusTasks=d.bonusTasks.filter(t=>t.id!==id);return d;});
   const addB=()=>{ if(!newBonus.label.trim())return; upd(d=>{d.bonusTasks=[...d.bonusTasks,{id:"w"+uid(),label:newBonus.label.trim(),score:Number(newBonus.score)||1}];return d;}); setNewBonus({label:"",score:1}); };
+  const moveBonus=(id,dir)=>upd(d=>{
+    const arr=[...d.bonusTasks];
+    const i=arr.findIndex(t=>t.id===id);
+    const j=i+dir;
+    if(j<0||j>=arr.length) return d;
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+    d.bonusTasks=arr; return d;
+  });
+  const undoBonus=(task)=>upd(d=>{
+    if(!d.bonusProgress[today]) return d;
+    if(!d.bonusProgress[today][task.id]) return d;
+    delete d.bonusProgress[today][task.id];
+    d.totalScore=Math.max(0,d.totalScore-task.score);
+    d.scoreLog=[{id:uid(),date:today,label:`取消：${task.label}`,delta:-task.score,type:"deduct"},...(d.scoreLog||[])];
+    return d;
+  });
   const saveDE=()=>{ if(!editingDeduct?.label.trim())return; upd(d=>{const i=d.deductions.findIndex(t=>t.id===editingDeduct.id);if(i>=0)d.deductions[i]={...editingDeduct,score:Number(editingDeduct.score)||1};return d;}); setEditingDeduct(null); };
   const delD=id=>upd(d=>{d.deductions=d.deductions.filter(t=>t.id!==id);return d;});
   const addD=()=>{ if(!newDeduct.label.trim())return; upd(d=>{d.deductions=[...d.deductions,{id:"d"+uid(),label:newDeduct.label.trim(),score:Number(newDeduct.score)||1}];return d;}); setNewDeduct({label:"",score:1}); };
@@ -538,14 +684,25 @@ function KidScreen({ kid, data, onUpdate, onBack }) {
           <div style={{fontSize:15,fontWeight:800,color:"#1e293b",marginBottom:4,display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
             今日獎勵任務 <span style={bge("#dcfce7","#15803d")}>今日 +{bonusScore} 分</span>
           </div>
-          <div style={{fontSize:11,color:"#94a3b8",marginBottom:10}}>✅ 完成後不可取消，每天重新開始</div>
+          <div style={{fontSize:11,color:"#94a3b8",marginBottom:10}}>
+            {adminMode?"🔓 家長模式：可取消已完成項目":"✅ 完成後不可取消，每天重新開始"}
+          </div>
           {data.bonusTasks.map(t=>{
             const done=todayBonus[t.id];
             return(
-              <div key={t.id} style={{display:"flex",alignItems:"center",gap:12,padding:"11px 14px",marginBottom:7,background:done?"#fef9c3":"#f8fafc",borderRadius:13,cursor:done?"default":"pointer",border:done?"2px solid #fde68a":"2px solid #e2e8f0",userSelect:"none",opacity:done?0.75:1,transition:"all .2s"}} onClick={()=>!done&&completeBonus(t)}>
-                <div style={{width:26,height:26,borderRadius:"50%",background:done?"#f59e0b":"transparent",border:done?"none":"2px solid #cbd5e1",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:900,color:"#fff",flexShrink:0}}>{done?"✓":""}</div>
-                <span style={{flex:1,fontSize:14,textDecoration:done?"line-through":"none",opacity:done?0.6:1,color:"#1e293b"}}>{t.label}</span>
+              <div key={t.id} style={{display:"flex",alignItems:"center",gap:10,padding:"11px 14px",marginBottom:7,background:done?"#fef9c3":"#f8fafc",borderRadius:13,border:done?"2px solid #fde68a":"2px solid #e2e8f0",userSelect:"none",transition:"all .2s"}}>
+                {/* 勾選／完成圓圈：非家長模式下已完成不可點 */}
+                <div
+                  style={{width:26,height:26,borderRadius:"50%",background:done?"#f59e0b":"transparent",border:done?"none":"2px solid #cbd5e1",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:900,color:"#fff",flexShrink:0,cursor:done?"default":"pointer"}}
+                  onClick={()=>!done&&completeBonus(t)}>
+                  {done?"✓":""}
+                </div>
+                <span style={{flex:1,fontSize:14,textDecoration:done?"line-through":"none",opacity:done?0.6:1,color:"#1e293b",cursor:done?"default":"pointer"}} onClick={()=>!done&&completeBonus(t)}>{t.label}</span>
                 <span style={bge(done?"#d1fae5":"#fde68a",done?"#065f46":"#92400e")}>{done?`+${t.score}分 ✓`:`+${t.score}分`}</span>
+                {/* 家長模式下已完成可取消 */}
+                {adminMode&&done&&(
+                  <button style={{padding:"3px 8px",background:"#fee2e2",border:"none",borderRadius:7,color:"#ef4444",fontSize:12,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap"}} onClick={()=>undoBonus(t)}>取消</button>
+                )}
               </div>
             );
           })}
@@ -554,7 +711,7 @@ function KidScreen({ kid, data, onUpdate, onBack }) {
           <div style={{marginTop:16,borderTop:"1px solid #f1f5f9",paddingTop:12}}>
             <div style={{fontSize:13,fontWeight:800,color:"#ef4444",marginBottom:8}}>⚠️ 扣分項目</div>
             {data.deductions.map(t=>(
-              <div key={t.id} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 14px",marginBottom:7,background:"#fff5f5",borderRadius:13,border:"2px solid #fecaca",cursor: adminMode?"pointer":"default"}} onClick={()=>adminMode&&setDeductTarget(t)}>
+              <div key={t.id} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 14px",marginBottom:7,background:"#fff5f5",borderRadius:13,border:"2px solid #fecaca",cursor:adminMode?"pointer":"default"}} onClick={()=>adminMode&&setDeductTarget(t)}>
                 <span style={{flex:1,fontSize:14,color:"#1e293b"}}>{t.label}</span>
                 <span style={bge("#fee2e2","#ef4444")}>-{t.score}分</span>
                 {adminMode&&<span style={{fontSize:12,color:"#ef4444",fontWeight:700}}>點擊扣分</span>}
@@ -599,7 +756,14 @@ function KidScreen({ kid, data, onUpdate, onBack }) {
 
           {/* 積分明細 */}
           <div style={card}>
-            <div style={{fontSize:14,fontWeight:800,color:"#1e293b",marginBottom:10}}>📋 積分明細</div>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+              <div style={{fontSize:14,fontWeight:800,color:"#1e293b"}}>📋 積分明細</div>
+              <button style={{padding:"5px 12px",background:kid.grad,border:"none",borderRadius:99,color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer"}} onClick={()=>{
+                const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+                const url=URL.createObjectURL(blob);
+                const a=document.createElement("a");a.href=url;a.download=`${kid.name}_${today}.json`;a.click();URL.revokeObjectURL(url);
+              }}>📥 匯出 JSON</button>
+            </div>
             {/* Filter */}
             <div style={{display:"flex",gap:4,marginBottom:12,flexWrap:"wrap"}}>
               {[["all","全部"],["bonus","加分"],["deduct","扣分"],["redeem","兌換"],["allowance","零用錢"]].map(([v,l])=>(
@@ -646,7 +810,7 @@ function KidScreen({ kid, data, onUpdate, onBack }) {
                   </button>
                 ))}
               </div>
-              {[0,1,2,3,4].map(i=>{
+              {Array.from({length: kid.stampFull}, (_,i)=>{
                 const val=(data.schedule?.[schedDay]?.[i])||"";
                 const isEd=schedEditing?.idx===i;
                 return(
@@ -673,9 +837,23 @@ function KidScreen({ kid, data, onUpdate, onBack }) {
           {/* 獎勵任務管理 */}
           {adminTab==="bonus"&&(
             <div>
-              {data.bonusTasks.map(t=>(
+              <div style={{fontSize:11,color:"#94a3b8",marginBottom:8}}>用 ↑↓ 調整順序</div>
+              {data.bonusTasks.map((t,idx)=>(
                 <div key={t.id} style={{display:"flex",alignItems:"center",gap:6,marginBottom:6,flexWrap:"wrap"}}>
-                  {editingBonus?.id===t.id?<><input style={inp({flex:1,minWidth:80})} value={editingBonus.label} onChange={e=>setEditingBonus(p=>({...p,label:e.target.value}))}/><input style={inp({width:50})} type="number" value={editingBonus.score} onChange={e=>setEditingBonus(p=>({...p,score:e.target.value}))}/><span style={{fontSize:11,color:"#94a3b8"}}>分</span><button style={{padding:"4px 8px",background:"#22c55e",border:"none",borderRadius:7,color:"#fff",fontWeight:700,cursor:"pointer"}} onClick={saveBE}>✓</button><button style={{padding:"4px 6px",background:"#e2e8f0",border:"none",borderRadius:7,color:"#64748b",fontWeight:700,cursor:"pointer"}} onClick={()=>setEditingBonus(null)}>✕</button></>:<><span style={{flex:1,fontSize:13}}>{t.label}</span><span style={bge("#fde68a","#92400e")}>{t.score}分</span><button style={{padding:"3px 7px",background:"#fef9c3",border:"none",borderRadius:7,cursor:"pointer",fontSize:13}} onClick={()=>setEditingBonus({...t})}>✏️</button><button style={{padding:"3px 7px",background:"#fee2e2",border:"none",borderRadius:7,cursor:"pointer",fontSize:13}} onClick={()=>delB(t.id)}>🗑</button></>}
+                  {editingBonus?.id===t.id
+                    ? <><input style={inp({flex:1,minWidth:80})} value={editingBonus.label} onChange={e=>setEditingBonus(p=>({...p,label:e.target.value}))}/><input style={inp({width:50})} type="number" value={editingBonus.score} onChange={e=>setEditingBonus(p=>({...p,score:e.target.value}))}/><span style={{fontSize:11,color:"#94a3b8"}}>分</span><button style={{padding:"4px 8px",background:"#22c55e",border:"none",borderRadius:7,color:"#fff",fontWeight:700,cursor:"pointer"}} onClick={saveBE}>✓</button><button style={{padding:"4px 6px",background:"#e2e8f0",border:"none",borderRadius:7,color:"#64748b",fontWeight:700,cursor:"pointer"}} onClick={()=>setEditingBonus(null)}>✕</button></>
+                    : <>
+                        {/* 排序按鈕 */}
+                        <div style={{display:"flex",flexDirection:"column",gap:1,flexShrink:0}}>
+                          <button style={{padding:"1px 5px",background:idx===0?"#f1f5f9":"#e2e8f0",border:"none",borderRadius:4,cursor:idx===0?"not-allowed":"pointer",fontSize:10,color:idx===0?"#cbd5e1":"#475569",lineHeight:1}} onClick={()=>moveBonus(t.id,-1)} disabled={idx===0}>▲</button>
+                          <button style={{padding:"1px 5px",background:idx===data.bonusTasks.length-1?"#f1f5f9":"#e2e8f0",border:"none",borderRadius:4,cursor:idx===data.bonusTasks.length-1?"not-allowed":"pointer",fontSize:10,color:idx===data.bonusTasks.length-1?"#cbd5e1":"#475569",lineHeight:1}} onClick={()=>moveBonus(t.id,1)} disabled={idx===data.bonusTasks.length-1}>▼</button>
+                        </div>
+                        <span style={{flex:1,fontSize:13}}>{t.label}</span>
+                        <span style={bge("#fde68a","#92400e")}>{t.score}分</span>
+                        <button style={{padding:"3px 7px",background:"#fef9c3",border:"none",borderRadius:7,cursor:"pointer",fontSize:13}} onClick={()=>setEditingBonus({...t})}>✏️</button>
+                        <button style={{padding:"3px 7px",background:"#fee2e2",border:"none",borderRadius:7,cursor:"pointer",fontSize:13}} onClick={()=>delB(t.id)}>🗑</button>
+                      </>
+                  }
                 </div>
               ))}
               <div style={{display:"flex",alignItems:"center",gap:6,marginTop:8,flexWrap:"wrap"}}>
