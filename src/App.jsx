@@ -528,7 +528,15 @@ function KidScreen({ kid, data, onUpdate, onBack }) {
     return d;
   });
 
-  const tryAdmin=()=>{ if(adminPwd===ADMIN_PASSWORD){setAdminMode(true);setShowLogin(false);setAdminPwd("");setAdminErr(false);}else setAdminErr(true); };
+  // ── Makeup bonus ──
+  const doMakeupBonus = (dateStr, task) => upd(d=>{
+    if(!d.bonusProgress[dateStr]) d.bonusProgress[dateStr]={};
+    if(d.bonusProgress[dateStr][task.id]) return d;
+    d.bonusProgress[dateStr][task.id]=true;
+    d.totalScore+=task.score;
+    d.scoreLog=[{id:uid(),date:dateStr,label:`補打卡：${task.label}`,delta:task.score,type:"bonus"},...(d.scoreLog||[])];
+    return d;
+  });
   const saveSchedItem=()=>{ if(!schedEditing)return; upd(d=>{ if(!d.schedule[schedDay])d.schedule[schedDay]=Array(kid.stampFull).fill(""); d.schedule[schedDay][schedEditing.idx]=schedEditing.value; return d; }); setSchedEditing(null); };
 
   const saveBE=()=>{ if(!editingBonus?.label.trim())return; upd(d=>{const i=d.bonusTasks.findIndex(t=>t.id===editingBonus.id);if(i>=0)d.bonusTasks[i]={...editingBonus,score:Number(editingBonus.score)||1};return d;}); setEditingBonus(null); };
@@ -900,22 +908,45 @@ function KidScreen({ kid, data, onUpdate, onBack }) {
           {/* 補打卡 */}
           {adminTab==="makeup"&&(
             <div>
-              <div style={{fontSize:12,color:"#64748b",marginBottom:10}}>為過去某天補勾選已完成的任務，補完後會自動更新戳章。</div>
-              <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
+              <div style={{fontSize:12,color:"#64748b",marginBottom:10}}>為過去某天補勾選已完成的任務，補完後會自動更新積分與戳章。</div>
+
+              {/* 選日期 */}
+              <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
                 <span style={{fontSize:13,fontWeight:700,color:"#1e293b",whiteSpace:"nowrap"}}>選擇日期</span>
                 <input type="date" style={inp({flex:1})} value={makeupDate} max={today}
                   onChange={e=>setMakeupDate(e.target.value)}/>
               </div>
-              <div style={{fontSize:12,color:"#94a3b8",marginBottom:8}}>
+              <div style={{fontSize:12,color:"#94a3b8",marginBottom:12}}>
                 {DAYS_FULL[new Date(makeupDate).getDay()]}　{makeupDate===today?"（今天）":""}
               </div>
+
+              {/* 每日任務補打卡 */}
+              <div style={{fontSize:13,fontWeight:800,color:"#1e293b",marginBottom:8}}>📋 每日任務</div>
               {makeupTasks.map((label,i)=>{
                 const done=makeupDp[`t${i}`];
                 return(
-                  <div key={i} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",marginBottom:7,background:done?"#f0fdf4":"#f8fafc",borderRadius:13,cursor:done?"default":"pointer",border:done?"2px solid #86efac":"2px solid #e2e8f0",userSelect:"none"}} onClick={()=>!done&&doMakeup(makeupDate,i)}>
+                  <div key={i} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",marginBottom:6,background:done?"#f0fdf4":"#f8fafc",borderRadius:13,cursor:done?"default":"pointer",border:done?"2px solid #86efac":"2px solid #e2e8f0",userSelect:"none"}} onClick={()=>!done&&doMakeup(makeupDate,i)}>
                     <div style={{width:24,height:24,borderRadius:"50%",background:done?"#22c55e":"transparent",border:done?"none":"2px solid #cbd5e1",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:900,color:"#fff",flexShrink:0}}>{done?"✓":""}</div>
                     <span style={{flex:1,fontSize:13,textDecoration:done?"line-through":"none",opacity:done?0.5:1}}>{label||`任務 ${i+1}`}</span>
                     {!done&&<span style={{fontSize:11,color:kid.color,fontWeight:700}}>補打卡</span>}
+                  </div>
+                );
+              })}
+
+              {/* 獎勵任務補打卡 */}
+              <div style={{fontSize:13,fontWeight:800,color:"#1e293b",marginTop:16,marginBottom:8}}>⭐ 獎勵任務</div>
+              <div style={{fontSize:11,color:"#94a3b8",marginBottom:8}}>補打卡後會加分並記錄在積分明細</div>
+              {data.bonusTasks.map(t=>{
+                const makeupBonus = data.bonusProgress?.[makeupDate]||{};
+                const done = makeupBonus[t.id];
+                return(
+                  <div key={t.id} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",marginBottom:6,background:done?"#fef9c3":"#f8fafc",borderRadius:13,cursor:done?"default":"pointer",border:done?"2px solid #fde68a":"2px solid #e2e8f0",userSelect:"none"}} onClick={()=>!done&&doMakeupBonus(makeupDate,t)}>
+                    <div style={{width:24,height:24,borderRadius:"50%",background:done?"#f59e0b":"transparent",border:done?"none":"2px solid #cbd5e1",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:900,color:"#fff",flexShrink:0}}>{done?"✓":""}</div>
+                    <span style={{flex:1,fontSize:13,textDecoration:done?"line-through":"none",opacity:done?0.5:1}}>{t.label}</span>
+                    {done
+                      ? <span style={{fontSize:11,color:"#16a34a",fontWeight:700}}>+{t.score}分 ✓</span>
+                      : <span style={{fontSize:11,color:kid.color,fontWeight:700}}>補打卡 +{t.score}分</span>
+                    }
                   </div>
                 );
               })}
