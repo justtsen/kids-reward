@@ -589,7 +589,9 @@ function KidScreen({ kid, data, onUpdate, onBack }) {
   const modal={background:"#fff",borderRadius:24,padding:"24px",maxWidth:360,width:"92%",boxShadow:"0 12px 40px #00000033"};
 
   // Filtered log
-  const filteredLog = (data.scoreLog||[]).filter(l=>logFilter==="all"||l.type===logFilter);
+  const filteredLog = (data.scoreLog||[])
+    .filter(l=>logFilter==="all"||l.type===logFilter)
+    .sort((a,b)=> b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
 
   // Makeup: past 14 days
   const makeupTasks = (data.schedule[new Date(makeupDate).getDay()]||[]);
