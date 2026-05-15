@@ -458,7 +458,7 @@ function KidScreen({ kid, data, onUpdate, onBack }) {
       const wEnd   = addDays(wStart, 6);
       const logs   = (data.scoreLog||[]).filter(l=>l.date>=wStart&&l.date<=wEnd);
       const score  = logs.reduce((s,l)=>s+l.delta,0);
-      const d = new Date(wStart);
+      const d = new Date(wStart + "T00:00:00+08:00");
       weeks.push({label:`${d.getMonth()+1}/${d.getDate()}`,score,wStart});
     }
     return weeks;
